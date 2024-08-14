@@ -1,3 +1,5 @@
+// tailwind.config.ts
+
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -12,9 +14,32 @@ const config: Config = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "gradient-radial-headerImg":
+          "radial-gradient(circle, #001E09 10%, #000000 100%)",
+        "primary-gradient":
+          "linear-gradient(90deg, #d4f475 0%, #72fa72 56%, #20fecd 100%)",
+        "secondary-gradient":
+          "linear-gradient(90deg, rgba(212, 244, 117, 0.55) 0%, rgba(114, 250, 114, 0.55) 25%, rgba(212, 244, 117, 0.55) 81.16%, rgba(32, 254, 205, 0.55) 100%)",
+      },
+      colors: {
+        // headerLeagueGreen: "#2C4529",
+        // headerLeagueGreenBorder: "#375832",
+        // infoButtonColor: "#1FDA00",
+
+        "primary-green": "#72fa72",
+        "secondary-green": "#2b4528",
+        "icon-green": "#1fda00",
+        "icon-red": "#f15a24",
+        "primary-gray": "#494949",
+        "secondary-gray": "#606060",
+        "off-white": "#f6f6f6",
+      },
+      boxShadow: {
+        primary: "-2px 4px 4px 0px rgba(0, 0, 0, 0.03)",
       },
     },
   },
   plugins: [],
 };
+
 export default config;
