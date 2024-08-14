@@ -20,7 +20,7 @@ const Page = async ({
     <main >
       <Header />
       <div className="flex justify-center">
-        <p>FPL Fines. Add your leagueId to the url, in order to get fines</p>
+        <p>FPL Fines. Add your leagueId to the url, in order to get fines: fpl-fines.xyz/leagueID</p>
       </div>
     </main>
     
