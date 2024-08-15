@@ -62,26 +62,27 @@ const Page = ({
         <Header />
         <div className="flex justify-center">
           <div className="w-11/12 m-auto -mt-24 z-[30] absolute">
-            <div className="flex justify-center">
-              <div className="w-10/12">
+            <div className="flex flex-col md:flex-row justify-center">
+              <div className="md:w-10/12">
                 <MainCard title={`Fines for ${data.league.name}`}>
                   <DisplayFineSummary users={data?.new_entries?.results || []}/> 
                 </MainCard>
               </div>
-              <div className="w-2/12 ml-8">
+              <div className="md:w-2/12 md:ml-8 mt-8 md:mt-0">
                 <MainCard title="Add fine">
                   <div className="flex justify-center m-5">
-                    <button className=" bg-secondary-gradient   m-auto py-2 px-2 rounded-full" onClick={handleAddFineClick}><AddCircleOutlineIcon/></button>
+                    <button className="bg-secondary-gradient m-auto py-2 px-2 rounded-full" onClick={handleAddFineClick}>
+                      <AddCircleOutlineIcon/>
+                    </button>
                   </div>
                 </MainCard>
               </div>
             </div>
-            <div className="mt-10 z-[30] ">
+            <div className="mt-10 z-[30]">
               <MainCard title={`Full list of fines for ${data.league.name}`}>
                 <div className="h-80 overflow-y-auto">
                   <DisplayAllFines isDelete={false} leagueData={data}/>
                 </div>
-                
               </MainCard>
             </div>
           </div>        
