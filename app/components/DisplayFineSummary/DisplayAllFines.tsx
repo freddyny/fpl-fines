@@ -48,7 +48,6 @@ const DisplayAllFines: React.FC<DisplayAllFinesProps> = ({ isDelete, leagueData 
         const subscription = supabase
             .channel('public:fines')
             .on('postgres_changes', { event: '*', schema: 'public', table: 'fines' }, (payload) => {
-                console.log('Change detected:', payload);
 
                 // Re-fetch data on any insert, update, or delete
                 fetchFineSummary();
@@ -63,7 +62,6 @@ const DisplayAllFines: React.FC<DisplayAllFinesProps> = ({ isDelete, leagueData 
     }, [leagueId]); // Add leagueId as a dependency to refetch if it changes
 
     const handleDeleteClick = (id: number) => {
-        console.log("Delete: " + id);
 
         // Delete the fine in Supabase that has id === id
         const deleteFine = async () => {
@@ -71,7 +69,6 @@ const DisplayAllFines: React.FC<DisplayAllFinesProps> = ({ isDelete, leagueData 
             if (error) {
                 console.error("Error deleting fine:", error.message);
             } else {
-                console.log("Fine deleted successfully");
                 fetchFineSummary(); // Refetch data after deletion
             }
         };
@@ -79,7 +76,6 @@ const DisplayAllFines: React.FC<DisplayAllFinesProps> = ({ isDelete, leagueData 
     };
 
     const handleEditClick = (id: number) => {
-        console.log(id);
         // get fine data from fineData using id
         const fine = fineData.find((fine) => fine.id === id);
         if (fine) {
@@ -96,7 +92,7 @@ const DisplayAllFines: React.FC<DisplayAllFinesProps> = ({ isDelete, leagueData 
     const sortedFineData = fineData.sort((a, b) => {
         const dateA = new Date(a.created_at);
         const dateB = new Date(b.created_at);
-        return dateA.getTime() - dateB.getTime();
+        return dateB.getTime() - dateA.getTime();
     });
     
 
