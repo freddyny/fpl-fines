@@ -24,14 +24,16 @@ const UpdateFine: React.FC<UpdateFineProps> = ({ username, fine, currency, team_
     const [newUserName, setNewUserName] = useState<string>(username); 
     const [newUserId, setNewUserId] = useState<number>(0);
 
-    const userData = leagueData.new_entries.results;
+    console.log(leagueData.standings.results);
+    
+    const userData = leagueData.standings.results;
 
     // Set initial values when the component mounts
     useEffect(() => {
         if (userData.length > 0) {
             const firstUser = userData[0];
             setNewTeamName(firstUser.entry_name);
-            setNewUserName(firstUser.player_first_name + " " + firstUser.player_last_name);
+            setNewUserName(firstUser.player_name);
             setNewUserId(firstUser.entry);
         }
 
@@ -56,6 +58,7 @@ const UpdateFine: React.FC<UpdateFineProps> = ({ username, fine, currency, team_
             if (error) {
                 console.log('Error inserting fine:', error);
             } else {
+                console.log('Fine added successfully:', data);
             }
         };
     
@@ -69,13 +72,16 @@ const UpdateFine: React.FC<UpdateFineProps> = ({ username, fine, currency, team_
     const updateDropdownInput = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const userIdData = userData.find((user: Result) => user.entry === Number(e.target.value));
         setNewTeamName(userIdData.entry_name);
-        setNewUserName(userIdData.player_first_name + " " + userIdData.player_last_name);
+        setNewUserName(userIdData.player_name);
         setNewUserId(userIdData.entry);
     };
 
     const closeModal = () => {
         setOpen(false);
     };
+    
+    console.log(userData);
+        
 
     return (
         <Popup isOpen={true} onClose={closeModal}>
@@ -95,7 +101,7 @@ const UpdateFine: React.FC<UpdateFineProps> = ({ username, fine, currency, team_
                         >
                             {userData.map((user: Result) => (
                                 <option key={user.entry} value={user.entry}>
-                                    {user.player_first_name + " " + user.player_last_name}
+                                    {user.player_name}
                                 </option>
                             ))}
                         </select>
