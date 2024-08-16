@@ -1,10 +1,15 @@
-'use client'
+'use client';
 
 import React, { useEffect, useState } from "react";
 import { supabase } from "../../lib/database/supabaseClient"; // Adjust the path based on your project structure
 import { Result } from "../../lib/types/FPLLeague"; // Adjust the path based on your project structure
 
-const DisplayFineSummary = ({ users }: { users: Result[] }) => {
+type DisplayFineSummaryProps = {
+    users: Result[];
+    leagueId: string; // Add leagueId as a prop
+};
+
+const DisplayFineSummary = ({ users, leagueId }: DisplayFineSummaryProps) => {
     // Define the types for the fine data and fine summary
     type FPLFineSummary = {
         user_id: number;
@@ -12,6 +17,15 @@ const DisplayFineSummary = ({ users }: { users: Result[] }) => {
         team: string;
         total_fines: number;
         number_of_fines: number;
+    };
+
+    type FPLFines = {
+        user_id: number;
+        username: string;
+        team_name: string;
+        fine: number;
+        league_id: string; // Ensure you have this field in your table
+        currency?: string;
     };
 
     const [fineData, setFineData] = useState<FPLFines[]>([]);
@@ -22,7 +36,8 @@ const DisplayFineSummary = ({ users }: { users: Result[] }) => {
             try {
                 const { data, error } = await supabase
                     .from("fines")
-                    .select("*");
+                    .select("*")
+                    .eq("league_id", leagueId); // Filter by leagueId
 
                 if (error) {
                     throw new Error(error.message);
@@ -42,7 +57,6 @@ const DisplayFineSummary = ({ users }: { users: Result[] }) => {
         const subscription = supabase
             .channel('public:fines')
             .on('postgres_changes', { event: '*', schema: 'public', table: 'fines' }, (payload) => {
-                console.log('Change detected:', payload);
 
                 // Re-fetch data when any insert, update, or delete occurs
                 fetchFineSummary();
@@ -53,7 +67,9 @@ const DisplayFineSummary = ({ users }: { users: Result[] }) => {
         return () => {
             supabase.removeChannel(subscription);
         };
-    }, []);
+    }, [leagueId]); // Dependency on leagueId to refetch if it changes
+
+
 
     useEffect(() => {
         if (fineData.length > 0) {
@@ -80,6 +96,10 @@ const DisplayFineSummary = ({ users }: { users: Result[] }) => {
         }
     }, [fineData]); // Dependency on fineData to recalculate the summary whenever it changes
 
+
+    //Sort fineSummary by total_fines in descending order
+    const sortedFineSummary = fineSummary.sort((a, b) => b.total_fines - a.total_fines);
+    
     return (
         <div>
             <table className="w-full">
@@ -95,7 +115,7 @@ const DisplayFineSummary = ({ users }: { users: Result[] }) => {
                 </thead>
                 <tbody className="text-[14px] text-secondary-gray text-center font-medium">
                     {fineSummary.length > 0 ? (
-                        fineSummary.map((fine, index) => (
+                        sortedFineSummary.map((fine, index) => (
                             <tr key={index} className="border-b border-off-white relative">
                                 <td className="px-4 py-2 text-left">{fine.username}</td>
                                 <td className="px-4 py-2 text-left">{fine.team}</td>

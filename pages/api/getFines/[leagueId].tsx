@@ -3,7 +3,6 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { supabase } from '../../../app/lib/database/supabaseClient'; // Adjust the path as needed
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    console.log("in right API");
     
     try {
         const { data, error } = await supabase

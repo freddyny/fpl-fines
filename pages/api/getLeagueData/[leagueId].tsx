@@ -16,7 +16,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const { leagueId } = req.query;
         const data = await getLeague(leagueId?.toString() || '');
         
-        console.log(data);
         
         return res.status(200).json(data);
     } catch (error) {

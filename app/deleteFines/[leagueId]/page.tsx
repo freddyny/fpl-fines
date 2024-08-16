@@ -65,7 +65,7 @@ const Page = ({
             <div className="flex justify-center">
               <div className="w-10/12">
                 <MainCard title={`Fines for ${data.league.name}`}>
-                  <DisplayFineSummary users={data?.new_entries?.results || []}/> 
+                  <DisplayFineSummary leagueId={leagueId} users={data?.new_entries?.results || []}/> 
                 </MainCard>
               </div>
               <div className="w-2/12 ml-8">

@@ -2,7 +2,6 @@
 
 export interface Fines {
     id: number;
-    created_at: Date;
     username: string;
     team_name: string;
     fine: number;
@@ -10,5 +9,6 @@ export interface Fines {
     fine_description: string;
     league_id: number;
     user_id: number;
+    created_at: string;
 
 }

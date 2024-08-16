@@ -26,7 +26,6 @@ const EditFine: React.FC<EditFineProps> = ({ username, fine, currency, team_name
     const [newUserName, setNewUserName] = useState<string>(username); 
     const [newUserId, setNewUserId] = useState<number>(userId); // Set initial userId from props
     
-    console.log(leagueData);
     
 
     const userData = leagueData.leagueData.new_entries.results;
@@ -57,9 +56,7 @@ const EditFine: React.FC<EditFineProps> = ({ username, fine, currency, team_name
 
             if (error) {
                 console.error('Error updating fine:', error);
-            } else {
-                console.log('Fine updated successfully:', data);
-            }
+            } 
         } catch (error) {
             console.error('Error saving fine:', error);
         }

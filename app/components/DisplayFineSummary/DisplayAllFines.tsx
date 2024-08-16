@@ -6,33 +6,28 @@ import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutl
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import EditFine from "../UpdateFine/EditFine"; // Import EditFine component
 
-interface FPLFines {
-    id: number;
-    username: string;
-    fine_description: string;
-    fine: number;
-    currency: string;
-    team_name: string;
-    user_id: number;
-    // add other fields as per your database structure
-}
 
 interface DisplayAllFinesProps {
     isDelete: boolean;
-    leagueData: FPLLeague
+    leagueData: FPLLeague;
+    
 }
 
 const DisplayAllFines: React.FC<DisplayAllFinesProps> = ({ isDelete, leagueData }) => {
     const [fineData, setFineData] = useState<FPLFines[]>([]);
     const [selectedFine, setSelectedFine] = useState<FPLFines | null>(null); // State to track selected fine for editing
     const [isEditOpen, setIsEditOpen] = useState<boolean>(false); // State to control the EditFine modal visibility
+    
+    const leagueId = leagueData.league.id; // Extract leagueId from leagueData
+    
 
     // Function to fetch fine data from the database
     const fetchFineSummary = async () => {
         try {
             const { data, error } = await supabase
                 .from("fines")
-                .select("*");
+                .select("*")
+                .eq("league_id", leagueId); // Filter by leagueId
 
             if (error) {
                 throw new Error(error.message);
@@ -65,7 +60,7 @@ const DisplayAllFines: React.FC<DisplayAllFinesProps> = ({ isDelete, leagueData 
             supabase.removeChannel(subscription);
         };
 
-    }, []);
+    }, [leagueId]); // Add leagueId as a dependency to refetch if it changes
 
     const handleDeleteClick = (id: number) => {
         console.log("Delete: " + id);
@@ -77,6 +72,7 @@ const DisplayAllFines: React.FC<DisplayAllFinesProps> = ({ isDelete, leagueData 
                 console.error("Error deleting fine:", error.message);
             } else {
                 console.log("Fine deleted successfully");
+                fetchFineSummary(); // Refetch data after deletion
             }
         };
         deleteFine();
@@ -97,6 +93,13 @@ const DisplayAllFines: React.FC<DisplayAllFinesProps> = ({ isDelete, leagueData 
         setSelectedFine(null); // Clear the selected fine data
     };
 
+    const sortedFineData = fineData.sort((a, b) => {
+        const dateA = new Date(a.created_at);
+        const dateB = new Date(b.created_at);
+        return dateA.getTime() - dateB.getTime();
+    });
+    
+
     return (
         <div>
             <table className="w-full">
@@ -112,7 +115,7 @@ const DisplayAllFines: React.FC<DisplayAllFinesProps> = ({ isDelete, leagueData 
                 </thead>
                 <tbody className="text-[14px] text-secondary-gray text-center font-medium">
                     {fineData.length > 0 ? (
-                        fineData.map((fine, index) => (
+                        sortedFineData.map((fine, index) => (
                             <tr key={index} className="border-b border-off-white relative">
                                 <td className="px-4 py-2 text-left">{fine.username}</td>
                                 <td className="px-4 py-2 text-left">{fine.fine_description}</td>
@@ -152,7 +155,7 @@ const DisplayAllFines: React.FC<DisplayAllFinesProps> = ({ isDelete, leagueData 
                     currency={selectedFine.currency}
                     team_name={selectedFine.team_name}
                     fine_description={selectedFine.fine_description}
-                    leagueData={{ leagueData }}
+                    leagueData={leagueData}
                     userId={selectedFine.user_id}
                     fineId={selectedFine.id} // Pass the fineId for the update
                     setOpen={closeEditModal}

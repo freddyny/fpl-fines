@@ -39,7 +39,6 @@ const UpdateFine: React.FC<UpdateFineProps> = ({ username, fine, currency, team_
 
     const handleSave = () => {
         const leagueId = leagueData.league.id;
-        console.log(newTeamName, newUserName, newUserId);
         
         // Function to add fine to the database
         const addFine = async () => {
@@ -57,7 +56,6 @@ const UpdateFine: React.FC<UpdateFineProps> = ({ username, fine, currency, team_
             if (error) {
                 console.log('Error inserting fine:', error);
             } else {
-                console.log('Fine inserted successfully:', data);
             }
         };
     
